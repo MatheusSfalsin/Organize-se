@@ -1,0 +1,23 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+// import { View } from 'react-native';
+
+const appStack = createStackNavigator();
+
+import Login from './pages/Login/index'
+import Register from './pages/Register/index'
+import List from './pages/List/index'
+
+export default function Routes() {
+    return (// tem que vir por volta das rotas
+        <NavigationContainer>
+            <appStack.Navigator screenOptions={{ headerShown: false }}>
+            <appStack.Screen name="List" component={List} />
+                <appStack.Screen name="Login" component={Login} />
+                <appStack.Screen name="Register" component={Register} />
+                
+            </appStack.Navigator>
+        </NavigationContainer>
+    )
+}
