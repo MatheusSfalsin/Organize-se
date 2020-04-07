@@ -44,7 +44,7 @@ export default function Login() {
         keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
         keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
 
-    })
+    },[])
 
     keyboardDidShow = () => {
         setControlImg(styles.logoImgMod)

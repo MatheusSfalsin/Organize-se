@@ -20,14 +20,15 @@ Icon.loadFont();
 import logoImg from '../../../images/tasks_25495.png'
 import database from '@react-native-firebase/database';
 // import firestore from '@react-native-firebase/firestore';
-// import prompt from 'react-native-prompt-android';
 
-export default function List() {
+export default function SubList () {
     const navigation = useNavigation();
 
-    const [dataList, setDataList] = useState([]);
-    const [n, setN] = useState(0);
+    const [email, setEmail] = useState('');
+    const [pass, setPass] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [controlImg, setControlImg] = useState(styles.logoImg);
+    const [controlTitle, setControlTitle] = useState(styles.title);
 
     goToRegister = () => {
         navigation.navigate('Register')
@@ -36,58 +37,35 @@ export default function List() {
     useEffect(() => {
         keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
         keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
-        ler()
-    }, [])
+
+    })
 
     keyboardDidShow = () => {
+        setControlImg(styles.logoImgMod)
+        setControlTitle(styles.title)
     }
 
     keyboardDidHide = () => {
+        setControlImg(styles.logoImg)
+        setControlTitle(styles.title)
     }
 
-    function teste(){
-        prompt(
-            'Enter password',
-            'Enter your password to claim your $1.5B in lottery winnings')
-    }
-
-    ler = async () => {
-        console.log(dataList)
-        await database()
+    ler = () => {
+        const reference = database().ref('/lists')
+        database()
             .ref('/lists')
             .on('value', snapshot => {
-                // console.log(snapshot.val())
-                setDataList([]);
-                console.log(dataList)
-                var dados = []
-
-                snapshot.forEach(element => {
-                    key = element.key
-                    dado = element.val().SubList
-                    dado.key = key 
-                    dados.push({title: element.val().title,key: key})
-                    console.log({title: element.val().title,key: key})
-
-                });
-
-                console.log(dados)
-                setDataList(dados);
+                console.log('User data: ', snapshot.val());
             });
-
-        console.log(dataList)
-
-
-
-
+        console.log(reference)
     }
 
     criar = () => {
         database()
             .ref().child(`lists`)
             .push({
-                title: 'Ola Mundo',
                 SubList: {
-                    description: '',
+                    description: 'Teste',
                     situation: true,
                 }
             })
@@ -105,7 +83,7 @@ export default function List() {
                 <Icon name="info" size={42} color="#5C5C5C" style={styles.info}></Icon>
             </View>
 
-            <TouchableOpacity onPress={() => { teste() }}>
+            <TouchableOpacity onPress={() => {criar() }}>
                 <Icon name="plus-circle" size={26} color="#5C5C5C" style={styles.create}>
                     <Text style={styles.createText}> Criar Tarefa</Text>
                 </Icon>
@@ -116,14 +94,14 @@ export default function List() {
 
             <FlatList
                 style={styles.incidentList}
-                data={dataList}
-                keyExtractor={list => String(list.key)}
+                data={[1, 2, 3]}
+                keyExtractor={incident => String(incident)}
                 showsVerticalScrollIndicator={false}
                 onEndReachedThreshold={0.2}
-                renderItem={({ item : list }) => (
+                renderItem={() => (
                     <TouchableOpacity style={styles.list} onPress={() => { ler() }}>
                         <View style={styles.buttonList}>
-                            <Text style={styles.buttonTextList}>{list.title}</Text>
+                            <Text style={styles.buttonTextList}>Tarefas Diárias</Text>
                         </View>
 
                         <View style={styles.iconsList}>
