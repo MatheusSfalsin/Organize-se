@@ -9,35 +9,6 @@ export default StyleSheet.create({
         paddingTop: 10
     },
 
-    head:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: "center",
-        marginBottom: 20,
-    },
-
-    logoImg: {
-        width: 100,
-        height: 110,
-        marginBottom: 10,
-        // justifyContent: 'space-between',
-        
-    },
-
-    logoImgAndTitle:{
-        flexDirection: 'row',
-        marginTop: 5,
-    },
-
-    title: {
-        fontSize: 26,
-        color: '#9F9F9F',
-        fontWeight: "bold",
-        marginTop: 40,
-        paddingBottom: 13,
-        paddingLeft:  12,
-        // justifyContent: 'space-between',
-    },
 
     hr: {
         borderBottomColor: '#ABABAB',
@@ -48,26 +19,103 @@ export default StyleSheet.create({
 
     }
     ,
-    info:{
-        marginRight: 15,
+
+    titleSubList: {
+        fontSize: 20,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 15,
+        marginBottom: 7,
+        color: '#5C5C5C',
+        fontWeight: 'bold',
     },
 
     create: {
-        marginLeft: 30,
+        position: 'relative',
+        marginTop: 15,
+        marginLeft: 20,
         marginBottom: 10
     },
+
     createText: {
-        fontSize: 22
+        fontSize: 17,
     },
 
-    list:{
-        marginTop: 5,
-        borderWidth: 1,
-        borderColor: '#CACACA',
-        padding: 12,
+
+    inputsCreate:{
+        position: 'absolute',
+        paddingTop: 20,
+        width: '100%',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        paddingLeft: 9,
+
+    },
+
+    inputCreate:{
+        backgroundColor: '#DBDBDB',
+        borderRadius: 7,
+        height: 45,
+        alignContent: 'center',
+        alignItems: 'center',
+        width: '75%',
+        marginTop: -20,
+    },
+
+
+    confirmCreate:{
+        width: '15%',
+        backgroundColor: '#E5E5E5',
+        height: 45,
+        marginTop: -20,
+        borderRadius: 7,
+        
+        
+        // borderColor: '#1FF63F',
+        // borderWidth: 1
+
+    },
+
+    confirmCreateIcon:{
+        marginTop: 6,
+        paddingLeft: 11,
+    },
+
+    cancelCreateIcon: {
+        marginTop: 6
+    }
+    ,
+
+    cancelCreate:{
+        width: '15%',
+        backgroundColor: '#E5E5E5',
+        height: 45,
+        marginTop: -20,
+        borderRadius: 7,
+    },
+
+
+    containerList:{
+        marginTop: 0,
+        // padding: 12,
+        paddingLeft:12,
+        paddingRight: 12,
         borderRadius: 7,
         justifyContent: 'space-between',
         flexDirection: 'row',
+    },
+
+    CheckBox:{
+        marginTop: 8,
+        // marginLeft: 10,
+    },
+
+    list:{
+        width: 220,
+        height: 46,
+        marginRight: 20,
+        paddingTop: 12,
+        paddingLeft: 0,
     },
 
     buttonList:{
@@ -83,6 +131,7 @@ export default StyleSheet.create({
     iconsList:{
         flexDirection: 'row',
         marginRight: 10,
+        paddingTop: 15,
     },
 
     iconList:{

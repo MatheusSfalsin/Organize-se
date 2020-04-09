@@ -8,15 +8,19 @@ const appStack = createStackNavigator();
 import Login from './pages/Login/index'
 import Register from './pages/Register/index'
 import List from './pages/List/index'
+import SubList from './pages/SubList/index'
 
 export default function Routes() {
     return (// tem que vir por volta das rotas
         <NavigationContainer>
             <appStack.Navigator screenOptions={{ headerShown: false }}>
-            <appStack.Screen name="List" component={List} />
+                
                 <appStack.Screen name="Login" component={Login} />
                 <appStack.Screen name="Register" component={Register} />
-                
+                <appStack.Screen name="List" component={List} />
+                <appStack.Screen name="SubList" component={SubList} />
+
+
             </appStack.Navigator>
         </NavigationContainer>
     )

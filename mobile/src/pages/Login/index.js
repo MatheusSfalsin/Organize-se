@@ -43,8 +43,18 @@ export default function Login() {
     useEffect(() => {
         keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
         keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
+        
+        verificationUser()
 
-    },[])
+    }, [])
+
+    verificationUser = () =>{
+        auth().onAuthStateChanged((user) => {
+            if (user) {
+              navigation.navigate('List', { user })
+            }
+        });
+    }
 
     keyboardDidShow = () => {
         setControlImg(styles.logoImgMod)
@@ -56,11 +66,13 @@ export default function Login() {
         setControlTitle(styles.title)
     }
 
-    logon = async (email,pass) => {
+    logon = async (email, pass) => {
         try {
             const user = await auth().signInWithEmailAndPassword(email, pass)
             setIsAuthenticated(true)
-            navigation.navigate('List')
+            // user2 = auth().currentUser;
+            console.log(user)
+            navigation.navigate('List', { user })
 
         } catch (error) {
             if (('' + error) == 'Error: [auth/wrong-password] The password is invalid or the user does not have a password.') {
@@ -68,8 +80,8 @@ export default function Login() {
 
             } else if (('' + error) == 'Error: [auth/invalid-email] The email address is badly formatted.') {
                 Alert.alert('Ops...', 'Email no formato incorreto.')
-                
-            }else if (('' + error) == 'Error: [auth/unknown] We have blocked all requests from this device due to unusual activity. Try again later. [ Too many unsuccessful login attempts. Please try again later. ]') {
+
+            } else if (('' + error) == 'Error: [auth/unknown] We have blocked all requests from this device due to unusual activity. Try again later. [ Too many unsuccessful login attempts. Please try again later. ]') {
                 Alert.alert('Ops...', 'Muitas tentativas de Login, tente novamente mais tarde.')
             }
 
@@ -96,9 +108,7 @@ export default function Login() {
             console.log(GoogleSignin)
             await GoogleSignin.hasPlayServices();
             // const userInfo = await GoogleSignin.signIn();
-            console.log('teste2')
             const userInfo = await GoogleSignin.signIn();
-            console.log('teste1')
             // Create a Google credential with the token
             // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
@@ -124,7 +134,7 @@ export default function Login() {
             <TextInput secureTextEntry={true} elevation={4} style={styles.input} placeholder='Digite sua Senha' onChange={e => setPass(e.nativeEvent.text)}>
             </TextInput>
 
-            <TouchableOpacity style={styles.buttonEnter} onPress={() => {logon(email,pass)}}>
+            <TouchableOpacity style={styles.buttonEnter} onPress={() => { logon(email, pass) }}>
                 <Icon name="sign-in" size={16} color="#FFF">
                     <Text style={styles.buttonText}> Logar</Text>
                 </Icon>
