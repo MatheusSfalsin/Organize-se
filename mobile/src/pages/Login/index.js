@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native'
+// import { YellowBox } from 'react-native'
 import {
     View,
     Text,
@@ -8,7 +9,8 @@ import {
     Image,
     KeyboardAvoidingView,
     Keyboard,
-    Alert
+    Alert,
+    BackHandler,
 } from 'react-native';
 
 import styles from './styles'
@@ -43,15 +45,13 @@ export default function Login() {
     useEffect(() => {
         keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
         keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
-        
         verificationUser()
-
     }, [])
 
-    verificationUser = () =>{
+    verificationUser = () => {
         auth().onAuthStateChanged((user) => {
             if (user) {
-              navigation.navigate('List', { user })
+                navigation.navigate('List', { user })
             }
         });
     }
@@ -71,7 +71,6 @@ export default function Login() {
             const user = await auth().signInWithEmailAndPassword(email, pass)
             setIsAuthenticated(true)
             // user2 = auth().currentUser;
-            console.log(user)
             navigation.navigate('List', { user })
 
         } catch (error) {
@@ -84,8 +83,6 @@ export default function Login() {
             } else if (('' + error) == 'Error: [auth/unknown] We have blocked all requests from this device due to unusual activity. Try again later. [ Too many unsuccessful login attempts. Please try again later. ]') {
                 Alert.alert('Ops...', 'Muitas tentativas de Login, tente novamente mais tarde.')
             }
-
-            console.log('erro: ' + error)
         }
     }
 

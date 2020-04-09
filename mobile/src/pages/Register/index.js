@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native'
 import {
-    View,
     Text,
     TextInput,
     TouchableOpacity,
     Image,
     KeyboardAvoidingView,
     Keyboard,
-    Alert
+    Alert,
 } from 'react-native';
 
 import styles from './styles'
@@ -44,8 +43,7 @@ export default function Register() {
     useEffect(() => {
         keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
         keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
-
-    })
+    },[])
 
     keyboardDidShow = () => {
         setControlImg(styles.logoImgMod)
@@ -69,11 +67,11 @@ export default function Register() {
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {
                         Alert.alert('Ops...', 'O endereço de email ja usado!')
-                        console.log('That email address is already in use!');
+                        // console.log('That email address is already in use!');
                     }
 
                     if (error.code === 'auth/invalid-email') {
-                        console.log('That email address is invalid!');
+                        // console.log('That email address is invalid!');
                         Alert.alert('Ops...', 'Endereço de email inválido!')
                     }
                 });

@@ -8,6 +8,7 @@ import {
     Image,
     Keyboard,
     FlatList,
+    BackHandler
 } from 'react-native';
 
 import styles from './styles'
@@ -29,17 +30,32 @@ export default function List() {
 
     const [dataList, setDataList] = useState([]);
     const [inputRef, setInputRef] = useState('');
+    const [keyUpdate, setKeyUpdate] = useState('');
     const [visible, setVisible] = useState('none');
     const [titleList, setTitleList] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
+
 
     goToSubList = (list) => {
-        console.log(list)
-        navigation.navigate('SubList',{list})
+        navigation.navigate('SubList', { list })
     }
 
+    // function componentDidMount() {
+    //     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    // }
+
+    // function  componentWillUnmount(){
+    //     BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    // }
+
+    // function handleBackButton() {
+    //     console.log('asd: ' + isAuthenticated)
+    //     return true;
+    // }
     useEffect(() => {
-        ler()
+        read()
+        setVisible('none');
+        
     }, [])
 
     keyboardDidShow = () => {
@@ -48,7 +64,9 @@ export default function List() {
     keyboardDidHide = () => {
     }
 
-    ler = () => {
+
+
+    read = () => {
         database()
             .ref(`/lists/${userConectionID}`)
             .on('value', snapshot => {
@@ -57,8 +75,6 @@ export default function List() {
                 snapshot.forEach(element => {
                     key = element.key
                     dados.push({ title: element.val().title, key: key })
-                    console.log({ title: element.val().title, key: key })
-
                 });
                 setDataList(dados);
             });
@@ -70,7 +86,7 @@ export default function List() {
             .then(() => navigation.navigate('Login'));
     }
 
-    clickCrate = () => {
+    function clickCreate() {
         setVisible('flex')
         inputRef.focus()
     }
@@ -78,17 +94,46 @@ export default function List() {
     cancelCreate = () => {
         setVisible('none');
         Keyboard.dismiss();
+        setTitleList('')
+        setKeyUpdate('')
     }
 
-    criar = () => {
+    prepareUpdate = (keyList, titleList) => {
+        setKeyUpdate(keyList)
+        clickCreate()
+        setTitleList(titleList)
+    }
+
+    create = () => {
+        if (keyUpdate) {
+            update(keyUpdate, titleList)
+        } else {
+            database()
+                .ref().child(`lists/${userConectionID}`)
+                .push({
+                    title: titleList,
+                })
+                .then(
+                    cancelCreate()
+                )
+        }
+
+    }
+
+    update = (keyList, titleList) => {
+        cancelCreate()
         database()
-            .ref().child(`lists/${userConectionID}`)
-            .push({
+            .ref(`lists/${userConectionID}/${keyList}`)
+            .update({
                 title: titleList,
             })
-            .then(
-                cancelCreate()
-            );
+    }
+
+
+    remove = async (keyList) => {
+        await database()
+            .ref(`lists/${userConectionID}/${keyList}`)
+            .remove();
     }
 
     return (
@@ -101,24 +146,23 @@ export default function List() {
                 </View>
 
                 <View>
-                    <TouchableOpacity onPress={() => {  }}>
+                    <TouchableOpacity onPress={() => { }}>
                         <Icon name="info" size={20} color="#5C5C5C" style={styles.info}>
                             <Text>    Info</Text>
                         </Icon>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { }}>
+                    <TouchableOpacity onPress={() => { logout() }}>
                         <Icon name="sign-out" size={20} color="#5C5C5C" style={styles.closeSession}>
                             <Text> Sair</Text>
                         </Icon>
                     </TouchableOpacity>
-
                 </View>
 
 
 
             </View>
 
-            <TouchableOpacity onPress={() => { clickCrate() }}>
+            <TouchableOpacity onPress={() => { clickCreate() }}>
                 <Icon name="plus-circle" size={26} color="#5C5C5C" style={styles.create}>
                     <Text style={styles.createText}> Criar Tarefa</Text>
                 </Icon>
@@ -128,11 +172,11 @@ export default function List() {
                         style={[styles.inputCreate, { display: visible }]}
                         placeholder='Nome da Lista'
                         ref={inputRef => setInputRef(inputRef)}
-                        clearTextOnFocus={true} //IOS
+                        value={titleList}
                         onChange={e => setTitleList(e.nativeEvent.text)}>
                     </TextInput>
 
-                    <TouchableOpacity onPress={() => { criar() }} style={[styles.confirmCreate, { display: visible }]}>
+                    <TouchableOpacity onPress={() => { create() }} style={[styles.confirmCreate, { display: visible }]}>
                         <Icon name="check-circle" size={35} style={styles.confirmCreateIcon} color="#0A9A1F"></Icon>
                     </TouchableOpacity>
 
@@ -160,10 +204,10 @@ export default function List() {
                             </View>
                         </TouchableOpacity>
                         <View style={styles.iconsList}>
-                            <TouchableOpacity onPress={() => { }}>
+                            <TouchableOpacity onPress={() => { prepareUpdate(list.key, list.title) }}>
                                 <Icon style={styles.iconList} name="edit" size={20} color="#6E6F70"></Icon>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { }}>
+                            <TouchableOpacity onPress={() => { remove(list.key) }}>
                                 <Icon style={styles.iconList} name="trash-o" size={20} color="#6E6F70"></Icon>
                             </TouchableOpacity>
                         </View>

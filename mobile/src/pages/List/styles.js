@@ -72,6 +72,7 @@ export default StyleSheet.create({
         width: '100%',
         justifyContent: 'space-between',
         flexDirection: 'row',
+        display: 'flex'
     },
 
     inputCreate:{

@@ -5,10 +5,10 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Image,
     Keyboard,
     FlatList,
     CheckBox,
+    BackHandler,
 } from 'react-native';
 
 import styles from './styles'
@@ -27,8 +27,6 @@ export default function SubList() {
 
     const route = useRoute();
     // const userConection = route.params.listId
-
-    var id = '-M4PPSafP64p65Mqdb9U'
     const list = route.params.list
 
     const [inputRef, setInputRef] = useState('');
@@ -55,7 +53,7 @@ export default function SubList() {
                 var dados = []
                 snapshot.forEach(element => {
                     key = element.key
-                    dados.push({ description: element.val().description, key: key })
+                    dados.push({ description: element.val().description, key: key, situation: element.val().situation })
                     console.log({ description: element.val().description, key: key })
 
                 });
@@ -63,9 +61,9 @@ export default function SubList() {
             });
     }
 
-    remove = async () => {
+    remove = async (keySubList) => {
         await database()
-            .ref(`/subLists/${list.key}`)
+            .ref(`/subLists/${list.key}/${keySubList}`)
             .remove();
     }
 
@@ -75,11 +73,13 @@ export default function SubList() {
     }
 
     cancelCreate = () => {
+        setDescriptionSubList('')
         setVisible('none');
         Keyboard.dismiss();
     }
 
     criar = () => {
+        setDescriptionSubList('')
         database()
             .ref().child(`subLists/${list.key}`)
             .push({
@@ -89,6 +89,15 @@ export default function SubList() {
             .then();
     }
 
+
+    modSituation = (keyList,situation) => {
+        cancelCreate()
+        database()
+            .ref(`/subLists/${list.key}/${keyList}`)
+            .update({
+                situation: !situation,
+            })
+    }
 
     return (
         <View style={styles.container}>
@@ -109,7 +118,7 @@ export default function SubList() {
                         style={[styles.inputCreate, { display: visible }]}
                         placeholder='Nome da Lista'
                         ref={inputRef => setInputRef(inputRef)}
-                        clearTextOnFocus={true} //IOS
+                        value={descriptionSubList}
                         onChange={e => setDescriptionSubList(e.nativeEvent.text)}>
                     </TextInput>
 
@@ -136,16 +145,22 @@ export default function SubList() {
                         <CheckBox
                             style={styles.CheckBox}
                             title='Click Here'
-                            value={false}
+                            value={!subList.situation}
+                            onChange={e => (console.log(e.nativeEvent.value))} 
+                            onTouchEnd={e => (modSituation(subList.key,subList.situation))}
 
                         />
-                        <TouchableOpacity style={styles.list} onPress={() => { }}>
+                        <TouchableOpacity style={styles.list} onPress={() => {modSituation(subList.key,subList.situation) }}>
                             <View style={styles.buttonList}>
-                                <Text style={styles.buttonTextList}>{subList.description}</Text>
+                                <Text style={[styles.buttonTextList , 
+                                    {textDecorationLine : !subList.situation ? 'line-through' : 'none', 
+                                    color: !subList.situation ? '#959697' : '#5C5C5C',
+                                    fontWeight: !subList.situation ? 'normal' : 'bold'
+                                    }]}>{subList.description}</Text>
                             </View>
                         </TouchableOpacity>
                         <View style={styles.iconsList}>
-                            <TouchableOpacity onPress={() => { }}>
+                            <TouchableOpacity onPress={() => { remove(subList.key) }}>
                                 <Icon style={styles.iconList} name="trash-o" size={20} color="#6E6F70"></Icon>
                             </TouchableOpacity>
                         </View>

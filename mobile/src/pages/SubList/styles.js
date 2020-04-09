@@ -16,7 +16,6 @@ export default StyleSheet.create({
         marginLeft: 15,
         marginRight: 15,
         marginBottom: 8,
-
     }
     ,
 
