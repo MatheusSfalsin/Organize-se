@@ -18,8 +18,8 @@ Icon.loadFont();
 
 // import firebase from '@react-native-firebase/app'
 // import auth from '@react-native-firebase/auth'
-import logoImg from '../../../images/tasks_25495.png'
 import database from '@react-native-firebase/database';
+import dataEHora from '../../utils/DataEHora'
 // import firestore from '@react-native-firebase/firestore';
 
 export default function SubList() {
@@ -28,6 +28,7 @@ export default function SubList() {
     const route = useRoute();
     // const userConection = route.params.listId
     const list = route.params.list
+    const userConectionID = route.params.userConectionID
 
     const [inputRef, setInputRef] = useState('');
     const [visible, setVisible] = useState('none');
@@ -47,24 +48,24 @@ export default function SubList() {
 
     ler = () => {
         database()
-            .ref(`/subLists/${list.key}`)
+            .ref(`/subLists/${userConectionID}/${list.key}`)
             .on('value', snapshot => {
                 setDataSubList([]);
                 var dados = []
                 snapshot.forEach(element => {
                     key = element.key
                     dados.push({ description: element.val().description, key: key, situation: element.val().situation })
-                    console.log({ description: element.val().description, key: key })
 
                 });
                 setDataSubList(dados);
             });
     }
 
-    remove = async (keySubList) => {
+    removeSubList = async (keySubList) => {
         await database()
-            .ref(`/subLists/${list.key}/${keySubList}`)
+            .ref(`/subLists/${userConectionID}/${list.key}/${keySubList}`)
             .remove();
+        altDataEHora()
     }
 
     clickCrate = () => {
@@ -81,21 +82,33 @@ export default function SubList() {
     criar = () => {
         setDescriptionSubList('')
         database()
-            .ref().child(`subLists/${list.key}`)
+            .ref().child(`subLists/${userConectionID}/${list.key}`)
             .push({
                 description: descriptionSubList,
                 situation: true,
             })
             .then();
+
+        altDataEHora()
     }
 
 
-    modSituation = (keyList,situation) => {
+    modSituation = (keyList, situation) => {
         cancelCreate()
         database()
-            .ref(`/subLists/${list.key}/${keyList}`)
+            .ref(`/subLists/${userConectionID}/${list.key}/${keyList}`)
             .update({
                 situation: !situation,
+            })
+
+        altDataEHora()
+    }
+
+    altDataEHora = () => {
+        database()
+            .ref(`lists/${userConectionID}/${list.key}`)
+            .update({
+                dataEHora: dataEHora.formattedDate(new Date())
             })
     }
 
@@ -146,21 +159,22 @@ export default function SubList() {
                             style={styles.CheckBox}
                             title='Click Here'
                             value={!subList.situation}
-                            onChange={e => (console.log(e.nativeEvent.value))} 
-                            onTouchEnd={e => (modSituation(subList.key,subList.situation))}
+                            onChange={e => (console.log(e.nativeEvent.value))}
+                            onTouchEnd={e => (modSituation(subList.key, subList.situation))}
 
                         />
-                        <TouchableOpacity style={styles.list} onPress={() => {modSituation(subList.key,subList.situation) }}>
+                        <TouchableOpacity style={styles.list} onPress={() => { modSituation(subList.key, subList.situation) }}>
                             <View style={styles.buttonList}>
-                                <Text style={[styles.buttonTextList , 
-                                    {textDecorationLine : !subList.situation ? 'line-through' : 'none', 
+                                <Text style={[styles.buttonTextList,
+                                {
+                                    textDecorationLine: !subList.situation ? 'line-through' : 'none',
                                     color: !subList.situation ? '#959697' : '#5C5C5C',
                                     fontWeight: !subList.situation ? 'normal' : 'bold'
-                                    }]}>{subList.description}</Text>
+                                }]}>{subList.description}</Text>
                             </View>
                         </TouchableOpacity>
                         <View style={styles.iconsList}>
-                            <TouchableOpacity onPress={() => { remove(subList.key) }}>
+                            <TouchableOpacity onPress={() => { removeSubList(subList.key) }}>
                                 <Icon style={styles.iconList} name="trash-o" size={20} color="#6E6F70"></Icon>
                             </TouchableOpacity>
                         </View>

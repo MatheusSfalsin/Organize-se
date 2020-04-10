@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigation, useRoute, StackActions,NavigationAction} from '@react-navigation/native'
+import { useNavigation, useRoute, StackActions, NavigationAction } from '@react-navigation/native'
 import {
     View,
     Text,
@@ -20,6 +20,8 @@ Icon.loadFont();
 import auth from '@react-native-firebase/auth'
 import logoImg from '../../../images/tasks_25495.png'
 import database from '@react-native-firebase/database';
+
+import dataEHora from '../../utils/DataEHora'
 // import firestore from '@react-native-firebase/firestore';
 
 export default function List() {
@@ -37,7 +39,7 @@ export default function List() {
 
 
     goToSubList = (list) => {
-        navigation.navigate('SubList', { list })
+        navigation.navigate('SubList', { list, userConectionID })
     }
 
     // function componentDidMount() {
@@ -71,8 +73,10 @@ export default function List() {
                 var dados = []
                 snapshot.forEach(element => {
                     key = element.key
-                    dados.push({ title: element.val().title, key: key })
+                    dados.push({ title: element.val().title, key: key, dataEHora: element.val().dataEHora })
                 });
+
+                dados = dataEHora.ordernar(dados)
                 setDataList(dados);
             });
     }
@@ -109,12 +113,12 @@ export default function List() {
                 .ref().child(`lists/${userConectionID}`)
                 .push({
                     title: titleList,
+                    dataEHora: dataEHora.formattedDate(new Date())
                 })
                 .then(
                     cancelCreate()
                 )
         }
-
     }
 
     update = (keyList, titleList) => {
@@ -130,6 +134,10 @@ export default function List() {
     remove = async (keyList) => {
         await database()
             .ref(`lists/${userConectionID}/${keyList}`)
+            .remove();
+
+        await database()
+            .ref(`/subLists/${userConectionID}/${list.key}`)
             .remove();
     }
 
