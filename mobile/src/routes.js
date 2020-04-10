@@ -10,15 +10,30 @@ import Register from './pages/Register/index'
 import List from './pages/List/index'
 import SubList from './pages/SubList/index'
 
+import auth from '@react-native-firebase/auth'
+
 export default function Routes() {
     return (// tem que vir por volta das rotas
         <NavigationContainer>
             <appStack.Navigator screenOptions={{ headerShown: false }}>
-                
-                <appStack.Screen name="Login" component={Login} />
-                <appStack.Screen name="Register" component={Register} />
-                <appStack.Screen name="List" component={List} />
-                <appStack.Screen name="SubList" component={SubList} />
+
+                {
+                    auth().currentUser ?
+                        <>
+                            <appStack.Screen name="List" component={List} />
+                            <appStack.Screen name="SubList" component={SubList} />
+                            <appStack.Screen name="Login" component={Login} />
+                            <appStack.Screen name="Register" component={Register} />
+
+                        </>
+                        :
+                        <>
+                            <appStack.Screen name="Login" component={Login} />
+                            <appStack.Screen name="Register" component={Register} />
+                            <appStack.Screen name="List" component={List} />
+                            <appStack.Screen name="SubList" component={SubList} />
+                        </>
+                }
 
 
             </appStack.Navigator>

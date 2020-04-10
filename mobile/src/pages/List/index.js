@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute, StackActions,NavigationAction} from '@react-navigation/native'
 import {
     View,
     Text,
@@ -26,7 +26,7 @@ export default function List() {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const userConectionID = route.params.user.uid
+    const userConectionID = auth().currentUser.uid;
 
     const [dataList, setDataList] = useState([]);
     const [inputRef, setInputRef] = useState('');
@@ -55,7 +55,6 @@ export default function List() {
     useEffect(() => {
         read()
         setVisible('none');
-        
     }, [])
 
     keyboardDidShow = () => {
@@ -63,8 +62,6 @@ export default function List() {
 
     keyboardDidHide = () => {
     }
-
-
 
     read = () => {
         database()

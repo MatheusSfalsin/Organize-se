@@ -10,14 +10,15 @@ const App = () => {
   ]);
 
   console.disableYellowBox = true;
-  
+
+ 
   persisteData = () => {
     database()
       .setPersistenceEnabled(true)
   }
 
   persisteData();
-   
+
   return (
     <Routes></Routes>
   )
