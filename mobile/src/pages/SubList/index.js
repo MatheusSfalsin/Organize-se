@@ -8,7 +8,6 @@ import {
     Keyboard,
     FlatList,
     CheckBox,
-    BackHandler,
 } from 'react-native';
 
 import styles from './styles'
@@ -16,24 +15,19 @@ import styles from './styles'
 import Icon from 'react-native-vector-icons/FontAwesome'
 Icon.loadFont();
 
-// import firebase from '@react-native-firebase/app'
-// import auth from '@react-native-firebase/auth'
 import database from '@react-native-firebase/database';
 import dataEHora from '../../utils/DataEHora'
-// import firestore from '@react-native-firebase/firestore';
 
 export default function SubList() {
     const navigation = useNavigation();
 
     const route = useRoute();
-    // const userConection = route.params.listId
     const list = route.params.list
     const userConectionID = route.params.userConectionID
 
     const [inputRef, setInputRef] = useState('');
     const [visible, setVisible] = useState('none');
     const [dataSubList, setDataSubList] = useState([]);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [descriptionSubList, setDescriptionSubList] = useState('');
 
     goToRegister = () => {
@@ -41,8 +35,6 @@ export default function SubList() {
     }
 
     useEffect(() => {
-        // keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
-        // keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
         ler()
     }, [])
 

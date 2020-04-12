@@ -18,15 +18,10 @@ import styles from './styles'
 import Icon from 'react-native-vector-icons/FontAwesome'
 Icon.loadFont();
 
-// import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import logoImg from '../../../images/tasks_25495.png'
 
 import { GoogleSignin } from '@react-native-community/google-signin';
-
-GoogleSignin.configure({
-    webClientId: '67845405351-aoehjfangl504m8unn7uhjujmhhkhtks.apps.googleusercontent.com', // From Firebase Console Settings
-});
 
 
 export default function Login() {

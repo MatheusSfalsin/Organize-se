@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Image,
     KeyboardAvoidingView,
     Keyboard,
     Alert,
@@ -16,23 +15,14 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 Icon.loadFont();
 
-// import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
-import logoImg from '../../../images/tasks_25495.png'
-
-import { GoogleSignin } from '@react-native-community/google-signin';
-
-GoogleSignin.configure({
-    webClientId: '67845405351-aoehjfangl504m8unn7uhjujmhhkhtks.apps.googleusercontent.com', // From Firebase Console Settings
-});
-
 
 export default function Register() {
     const navigation = useNavigation();
 
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [passRepet, setPassRepet] = useState('');
     const [controlImg, setControlImg] = useState(styles.logoImg);
     const [controlTitle, setControlTitle] = useState(styles.title);
 
@@ -43,7 +33,7 @@ export default function Register() {
     useEffect(() => {
         keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
         keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
-    },[])
+    }, [])
 
     keyboardDidShow = () => {
         setControlImg(styles.logoImgMod)
@@ -55,14 +45,15 @@ export default function Register() {
         setControlTitle(styles.title)
     }
 
-    createUser = async (email,pass) => {
+    createUser = async (email, pass, passRepet) => {
         try {
-            await auth()
-                .createUserWithEmailAndPassword(email,pass )
-                .then( async () => {
+            if(pass === passRepet){
+                await auth()
+                .createUserWithEmailAndPassword(email, pass)
+                .then(async () => {
                     Alert.alert('Sucesso!', 'Usuario Criado com Sucesso. Acesse!')
                     navigation.goBack()
-                
+
                 })
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {
@@ -75,6 +66,10 @@ export default function Register() {
                         Alert.alert('Ops...', 'Endereço de email inválido!')
                     }
                 });
+            }else{
+                Alert.alert('Senhas incorreta!', 'Repita a senha Corretamente.')
+            }
+            
         } catch (error) {
 
         }
@@ -92,12 +87,12 @@ export default function Register() {
 
             <TextInput elevation={4} style={styles.input} placeholder='Digite seu Email' onChange={e => setEmail(e.nativeEvent.text)}>
             </TextInput>
-            <TextInput elevation={4} style={styles.input} placeholder='Digite sua Senha' onChange={e => setPass(e.nativeEvent.text)}>
+            <TextInput elevation={4} secureTextEntry={true} style={styles.input} placeholder='Digite sua Senha' onChange={e => setPass(e.nativeEvent.text)}>
             </TextInput>
-            <TextInput elevation={4} style={styles.input} placeholder='Confirme a Senha' onChange={e => setPass(e.nativeEvent.text)}>
+            <TextInput elevation={4} secureTextEntry={true} style={styles.input} placeholder='Confirme a Senha' onChange={e => setPassRepet(e.nativeEvent.text)}>
             </TextInput>
 
-            <TouchableOpacity style={styles.buttonCad} onPress={() => {createUser(email,pass)}}>
+            <TouchableOpacity style={styles.buttonCad} onPress={() => { createUser(email, pass, passRepet) }}>
                 <Icon name="sign-in" size={16} color="#FFF">
                     <Text style={styles.buttonText}> Registra-se</Text>
                 </Icon>

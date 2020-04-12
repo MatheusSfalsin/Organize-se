@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute, StackActions, NavigationAction } from '@react-navigation/native'
 import {
     View,
@@ -8,7 +8,7 @@ import {
     Image,
     Keyboard,
     FlatList,
-    BackHandler
+    Alert
 } from 'react-native';
 
 import styles from './styles'
@@ -16,13 +16,12 @@ import styles from './styles'
 import Icon from 'react-native-vector-icons/FontAwesome'
 Icon.loadFont();
 
-// import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import logoImg from '../../../images/tasks_25495.png'
 import database from '@react-native-firebase/database';
 
 import dataEHora from '../../utils/DataEHora'
-// import firestore from '@react-native-firebase/firestore';
+import ordernacao from '../../utils/ordernacao'
 
 export default function List() {
     const navigation = useNavigation();
@@ -42,28 +41,10 @@ export default function List() {
         navigation.navigate('SubList', { list, userConectionID })
     }
 
-    // function componentDidMount() {
-    //     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-    // }
-
-    // function  componentWillUnmount(){
-    //     BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-    // }
-
-    // function handleBackButton() {
-    //     console.log('asd: ' + isAuthenticated)
-    //     return true;
-    // }
     useEffect(() => {
         read()
         setVisible('none');
     }, [])
-
-    keyboardDidShow = () => {
-    }
-
-    keyboardDidHide = () => {
-    }
 
     read = () => {
         database()
@@ -76,7 +57,7 @@ export default function List() {
                     dados.push({ title: element.val().title, key: key, dataEHora: element.val().dataEHora })
                 });
 
-                dados = dataEHora.ordernar(dados)
+                dados = ordernacao.ordernar(dados)
                 setDataList(dados);
             });
     }
@@ -103,6 +84,23 @@ export default function List() {
         setKeyUpdate(keyList)
         clickCreate()
         setTitleList(titleList)
+    }
+
+
+    alertToRemove = (list) => {
+        Alert.alert(
+            'Remover Lista?',
+            'Deseja realmente apagar essa lista? Todos os dados nela serão perdidas!',
+            [
+                { text: 'OK', onPress: () => remove(list) },
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+                
+            ],
+            { cancelable: true },
+        );
     }
 
     create = () => {
@@ -162,9 +160,6 @@ export default function List() {
                         </Icon>
                     </TouchableOpacity>
                 </View>
-
-
-
             </View>
 
             <TouchableOpacity onPress={() => { clickCreate() }}>
@@ -212,7 +207,7 @@ export default function List() {
                             <TouchableOpacity onPress={() => { prepareUpdate(list.key, list.title) }}>
                                 <Icon style={styles.iconList} name="edit" size={20} color="#6E6F70"></Icon>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { remove(list.key) }}>
+                            <TouchableOpacity onPress={() => { alertToRemove(list.key) }}>
                                 <Icon style={styles.iconList} name="trash-o" size={20} color="#6E6F70"></Icon>
                             </TouchableOpacity>
                         </View>
