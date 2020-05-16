@@ -17,7 +17,7 @@ Projeto de Organização pessoal em formato de Listas
 
   ### :camera: Tela de Login
 
-  ![png1](github/Login.jpg)
+  ![png1](github/Login.jpg =250x)
 
   ### :camera: Cadastro do Usuário
 
