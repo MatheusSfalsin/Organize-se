@@ -17,19 +17,29 @@ Projeto de Organização pessoal em formato de Listas
 
   ### :camera: Tela de Login
 
-  ![png1](github/Login.jpg =250x)
+  <p align="center">
+  <img src="github/Login.jpg" width="350">
+  </p>
 
   ### :camera: Cadastro do Usuário
 
-  ![png2](github/Cadastro.jpg)
+  <p align="center">
+  <img src="github/Cadastro.jpg" width="350">
+  </p>
 
   ### :camera: Listagem
 
-  ![png2](github/Listas.jpg) ![png2](github/Criacao_lista.jpg)
+  <p align="center">
+  <img src="github/Listas.jpg" width="350">
+  <img src="github/Criacao_lista.jpg" width="350">
+  </p>
 
   ### :camera: Detalhes de uma Lista
 
-  ![png2](github/Detalhes_lista.jpg) ![png2](github/Criacao_Detalhes_lista.jpg)
+  <p align="center">
+  <img src="github/Detalhes_lista.jpg" width="350">
+  <img src="github/Criacao_Detalhes_lista.jpg" width="350">
+  </p>
 
   ## Tecnologias:
 
