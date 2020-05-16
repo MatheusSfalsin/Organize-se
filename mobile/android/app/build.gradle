@@ -154,7 +154,12 @@ android {
         }
 
         release {
-       
+            if (project.hasProperty('my-upload-key.keystore')) {
+                storeFile file('my-upload-key.keystore')
+                storePassword ""
+                keyAlias ""
+                keyPassword ""
+            }
         }
     }
     buildTypes {
